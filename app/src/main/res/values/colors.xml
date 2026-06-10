@@ -7,6 +7,7 @@
     <color name="roxo_neon">#8A2BE2</color>
     <color name="verde_vibrante">#00FF7F</color>
     <color name="vermelho_neon">#FF4C4C</color>
+    <color name="vermelho_claro">#FF7676</color>
     <color name="raridade_comum">#4CAF50</color>
     <color name="raridade_raro">#00BFFF</color>
     <color name="raridade_lendario">#FFD700</color>

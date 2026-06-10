@@ -34,8 +34,11 @@ class MainActivity : AppCompatActivity() {
         // Observe session state, redirect to login if session cleared
         lifecycleScope.launch {
             sharedViewModel.currentUser.collectLatest { user ->
-                // Wait, only redirect on initial check if session is empty.
-                // We'll let SplashActivity do the initial check or check if we are logged out
+                if (user == null) {
+                    val intent = Intent(this@MainActivity, AuthActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
     }

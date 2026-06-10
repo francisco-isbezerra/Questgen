@@ -40,6 +40,11 @@ class ProfileFragment : Fragment() {
         binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
 
+        // Setup logout button
+        binding.btnLogout.setOnClickListener {
+            mainViewModel.logout()
+        }
+
         // Observe Shared user profile
         viewLifecycleOwner.lifecycleScope.launch {
             mainViewModel.currentUser.collectLatest { user ->

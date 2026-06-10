@@ -45,6 +45,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun logout() {
+        userRepository.clearSession()
+        _currentUser.value = null
+    }
+
     fun updateUser(user: User) {
         userRepository.saveUserSession(user)
         _currentUser.value = user

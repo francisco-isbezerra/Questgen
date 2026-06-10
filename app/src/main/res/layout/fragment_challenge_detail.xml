@@ -230,19 +230,12 @@
                 android:padding="12dp">
 
                 <TextView
+                    android:id="@+id/tv_next_expeditions_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Ataque Furtivo de Neon (+100 GC)"
+                    android:text="Sincronizando próximas expedições..."
                     android:textColor="@color/white"
                     android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="• Neural Network Override (+150 GC)"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:layout_marginTop="6dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

@@ -31,6 +31,32 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setupWithNavController(navController)
 
+        // Safe navigation selection wrapper to mitigate NullPointerException crashes during swift navigation state shifts
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            try {
+                if (navController.currentDestination != null) {
+                    androidx.navigation.ui.NavigationUI.onNavDestinationSelected(item, navController)
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                false
+            }
+        }
+
+        // Handle item reselection (e.g. clicking Home tab again from details to pop back to HomeFragment)
+        binding.bottomNavigation.setOnItemReselectedListener { item ->
+            try {
+                if (navController.currentDestination != null) {
+                    navController.popBackStack(item.itemId, false)
+                }
+            } catch (e: Exception) {
+                try {
+                    navController.navigate(item.itemId)
+                } catch (ex: Exception) {}
+            }
+        }
+
         // Observe session state, redirect to login if session cleared
         lifecycleScope.launch {
             sharedViewModel.currentUser.collectLatest { user ->

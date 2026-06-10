@@ -51,4 +51,9 @@ interface ApiService {
     suspend fun obterRankingGlobal(
         @Query("user_id") userId: Int
     ): ApiResponse<List<LeaderboardRow>>
+
+    @GET("buscar_desafios.php")
+    suspend fun obterDesafiosPorJogo(
+        @Query("game_id") gameId: Int
+    ): ApiResponse<List<Challenge>>
 }

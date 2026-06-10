@@ -54,8 +54,8 @@ class ProductAdapter(
         // Load product image
         holder.binding.imgProduct.load(product.image_url) {
             crossfade(true)
-            placeholder(R.color.bg_secundario)
-            error(R.color.bg_secundario)
+            placeholder(R.drawable.ic_games)
+            error(R.drawable.ic_games)
         }
 
         holder.binding.btnBuyProduct.setOnClickListener {

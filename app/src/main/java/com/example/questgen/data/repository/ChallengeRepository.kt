@@ -40,4 +40,8 @@ class ChallengeRepository(context: Context) {
     suspend fun getShopItems(): ApiResponse<List<com.example.questgen.data.model.Product>> {
         return apiService.obterItensLoja()
     }
+
+    suspend fun getChallengesByGame(gameId: Int): ApiResponse<List<Challenge>> {
+        return apiService.obterDesafiosPorJogo(gameId)
+    }
 }

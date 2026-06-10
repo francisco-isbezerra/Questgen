@@ -177,6 +177,26 @@ class ChallengeDetailFragment : Fragment() {
                 }
             }
         }
+        // Observe game challenges list to dynamically populate Next Expeditions list
+        viewLifecycleOwner.lifecycleScope.launch {
+            challengeViewModel.gameChallenges.collectLatest { challenges ->
+                val current = currentChallenge
+                if (current != null && challenges.isNotEmpty()) {
+                    val nextList = challengeViewModel.getNextChallenges(current, challenges)
+                    if (nextList.isNotEmpty()) {
+                        val sb = StringBuilder()
+                        nextList.forEach { next ->
+                            sb.append("• ${next.title} (+${next.reward_amount} GC)\n")
+                        }
+                        binding.tvNextExpeditionsList.text = sb.toString().trim()
+                    } else {
+                        binding.tvNextExpeditionsList.text = "Nenhuma expedição futura disponível"
+                    }
+                } else {
+                    binding.tvNextExpeditionsList.text = "Nenhuma expedição futura disponível"
+                }
+            }
+        }
     }
 
     private fun bindChallengeData(challenge: Challenge) {
@@ -213,6 +233,9 @@ class ChallengeDetailFragment : Fragment() {
             binding.btnClaim.visibility = View.GONE
             binding.btnForfeit.visibility = View.GONE
         }
+
+        // Fetch actual game challenges from backend dynamically
+        challengeViewModel.fetchChallengesByGame(challenge.game_id)
     }
 
     private fun setButtonsEnabled(enabled: Boolean) {

@@ -179,6 +179,40 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 
+    private val _gameChallenges = MutableStateFlow<List<Challenge>>(emptyList())
+    val gameChallenges: StateFlow<List<Challenge>> = _gameChallenges
+
+    fun fetchChallengesByGame(gameId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = challengeRepository.getChallengesByGame(gameId)
+                if (response.status == "success" && response.data != null) {
+                    _gameChallenges.value = response.data
+                } else {
+                    _gameChallenges.value = emptyList()
+                }
+            } catch (e: Exception) {
+                _gameChallenges.value = emptyList()
+            }
+        }
+    }
+
+    fun getNextChallenges(currentChallenge: Challenge, gameChallengesList: List<Challenge>): List<Challenge> {
+        val currentIndex = gameChallengesList.indexOfFirst {
+            it.id == currentChallenge.id || it.title.equals(currentChallenge.title, ignoreCase = true)
+        }
+        if (currentIndex == -1 || gameChallengesList.size <= 1) {
+            return emptyList()
+        }
+
+        val nextChallenges = mutableListOf<Challenge>()
+        for (i in 1 until gameChallengesList.size) {
+            val nextIndex = (currentIndex + i) % gameChallengesList.size
+            nextChallenges.add(gameChallengesList[nextIndex])
+        }
+        return nextChallenges
+    }
+
     override fun onCleared() {
         super.onCleared()
         stopCountdown()

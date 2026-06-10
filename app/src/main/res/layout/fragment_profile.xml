@@ -84,7 +84,7 @@
             android:id="@+id/tv_profile_sub"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Synchronizing reality with digital objectives. Level 42 Cyber-Architect."
+            android:text="Sincronizando a realidade com os objetivos digitais. Nível 42."
             android:textColor="@color/gray_text"
             android:textSize="12sp"
             android:gravity="center"

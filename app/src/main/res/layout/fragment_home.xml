@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_principal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- Top Header -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/bg_secundario"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_profile"
+                android:scaleType="centerCrop"
+                android:padding="4dp"
+                app:tint="@color/azul_neon" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nova_Protocol"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toTopOf="@id/card_avatar"
+            app:layout_constraintBottom_toBottomOf="@id/card_avatar"
+            app:layout_constraintStart_toEndOf="@id/card_avatar" />
+
+        <!-- Coins Balance Pill -->
+        <LinearLayout
+            android:id="@+id/layout_coins_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_pill"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/tv_coins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1,250 GC"
+                android:textColor="@color/verde_vibrante"
+                android:textStyle="bold"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Brand Title -->
+        <TextView
+            android:id="@+id/tv_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUESTGEN"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:letterSpacing="0.1"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/card_avatar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Giant Generator Button -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_generate_button"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="14dp"
+            app:cardBackgroundColor="@color/azul_neon"
+            app:layout_constraintTop_toBottomOf="@id/tv_brand">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tv_btn_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GERAR DESAFIO"
+                    android:textColor="#000000"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_btn_subtitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/tv_btn_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PREPARE-SE PARA A PRÓXIMA JORNADA"
+                    android:textColor="#444444"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_btn_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Active Challenge Section Header -->
+        <TextView
+            android:id="@+id/tv_header_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DESAFIO ATIVO"
+            android:textColor="@color/gray_text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@id/card_generate_button"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- No Active Challenge Placeholder -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_no_challenge"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/bg_secundario"
+            app:layout_constraintTop_toBottomOf="@id/tv_header_active">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nenhum desafio ativo no momento.\nSelecione um jogo para gerar um!"
+                android:textColor="@color/gray_text"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:layout_gravity="center" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Active Challenge Container Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_active_challenge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/bg_secundario"
+            app:layout_constraintTop_toBottomOf="@id/tv_header_active">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Badge and Difficulty -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_challenge_rarity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LENDÁRIO"
+                        android:textColor="@color/raridade_lendario"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:background="#2E2800"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tv_challenge_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="14:59:20"
+                        android:textColor="#FFD700"
+                        android:textStyle="bold"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tv_challenge_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="O Vazio de Neon"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp" />
+
+                <!-- Description -->
+                <TextView
+                    android:id="@+id/tv_challenge_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Conclua a expedição em menos de 15 minutos."
+                    android:textColor="@color/gray_text"
+                    android:textSize="13sp"
+                    android:layout_marginTop="4dp" />
+
+                <!-- Reactive progress bar -->
+                <ProgressBar
+                    android:id="@+id/progress_challenge"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="16dp"
+                    android:progress="85"
+                    android:progressTint="@color/azul_neon" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_reward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+200 GC"
+                        android:textColor="@color/verde_vibrante"
+                        android:textStyle="bold"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Progresso: 85%"
+                        android:textColor="@color/gray_text"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Quick actions: Shop and Ranking -->
+        <LinearLayout
+            android:id="@+id/layout_quick_actions"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/card_active_challenge">
+
+            <!-- Shop Quick block -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_quick_shop"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/bg_secundario">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_shop"
+                        app:tint="@color/azul_neon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ir para a Loja"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Leaderboard Quick block -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_quick_ranking"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/bg_secundario">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_ranking"
+                        app:tint="@color/azul_neon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ver Rankings"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <!-- Loader overlay for the whole fragment -->
+        <ProgressBar
+            android:id="@+id/progress_home_load"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:indeterminateTint="@color/azul_neon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

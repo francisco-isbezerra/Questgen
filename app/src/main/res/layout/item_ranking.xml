@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_leaderboard_row"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/bg_secundario">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp">
+
+        <!-- Position Number -->
+        <TextView
+            android:id="@+id/tv_row_position"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="4º"
+            android:textColor="@color/gray_text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- User Avatar icon -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_row_avatar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="#141414"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_row_position">
+
+            <ImageView
+                android:id="@+id/img_row_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_profile"
+                android:padding="3dp"
+                app:tint="@color/gray_text" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Player Name -->
+        <TextView
+            android:id="@+id/tv_row_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="FELIX"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/card_row_avatar"
+            app:layout_constraintEnd_toStartOf="@id/tv_row_you_tag" />
+
+        <!-- Highlight Badge "YOU" -->
+        <TextView
+            android:id="@+id/tv_row_you_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOU"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="9sp"
+            android:background="@drawable/bg_button_neon"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:layout_marginEnd="12dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_row_coins" />
+
+        <!-- Coins Balance -->
+        <TextView
+            android:id="@+id/tv_row_coins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="74,500 GC"
+            android:textColor="@color/verde_vibrante"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

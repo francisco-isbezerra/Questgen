@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.QuestGen" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/azul_neon</item>
+        <item name="colorSecondary">@color/roxo_neon</item>
+        <item name="android:windowBackground">@color/bg_principal</item>
+    </style>
+
+    <style name="Theme.QuestGen" parent="Base.Theme.QuestGen" />
+
+    <style name="Theme.QuestGen.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/azul_neon</item>
+        <item name="colorSecondary">@color/roxo_neon</item>
+        <item name="android:windowBackground">@color/bg_principal</item>
+    </style>
+    
+    <!-- Fallback if lowercase is referenced -->
+    <style name="Theme.Questgen" parent="Theme.QuestGen" />
+    <style name="Theme.Questgen.NoActionBar" parent="Theme.QuestGen.NoActionBar" />
+</resources>

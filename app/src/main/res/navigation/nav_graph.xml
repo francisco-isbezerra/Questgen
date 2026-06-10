@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.questgen.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_gameSelectionFragment"
+            app:destination="@id/gameSelectionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_challengeDetailFragment"
+            app:destination="@id/challengeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameSelectionFragment"
+        android:name="com.example.questgen.ui.games.GameSelectionFragment"
+        android:label="Seleção de Jogos"
+        tools:layout="@layout/fragment_game_selection">
+        <action
+            android:id="@+id/action_gameSelectionFragment_to_challengeDetailFragment"
+            app:destination="@id/challengeDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/challengeDetailFragment"
+        android:name="com.example.questgen.ui.challenge.ChallengeDetailFragment"
+        android:label="Detalhe do Desafio"
+        tools:layout="@layout/fragment_challenge_detail" />
+
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="com.example.questgen.ui.shop.ShopFragment"
+        android:label="Loja"
+        tools:layout="@layout/fragment_shop" />
+
+    <fragment
+        android:id="@+id/rankingFragment"
+        android:name="com.example.questgen.ui.ranking.RankingFragment"
+        android:label="Ranking"
+        tools:layout="@layout/fragment_ranking" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.questgen.ui.profile.ProfileFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

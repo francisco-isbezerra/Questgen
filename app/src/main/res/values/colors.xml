@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_principal">#0D0D0D</color>
+    <color name="bg_secundario">#1A1A1A</color>
+    <color name="bg_card">#141414</color>
+    <color name="azul_neon">#00BFFF</color>
+    <color name="roxo_neon">#8A2BE2</color>
+    <color name="verde_vibrante">#00FF7F</color>
+    <color name="vermelho_neon">#FF4C4C</color>
+    <color name="raridade_comum">#4CAF50</color>
+    <color name="raridade_raro">#00BFFF</color>
+    <color name="raridade_lendario">#FFD700</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="gray_text">#888888</color>
+</resources>

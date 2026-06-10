@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_principal"
+    android:padding="16dp">
+
+    <!-- Scope Selector Toggle -->
+    <LinearLayout
+        android:id="@+id/layout_ranking_scope"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_pill"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/btn_scope_global"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:text="GLOBAL"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:background="@drawable/bg_button_neon" />
+
+        <TextView
+            android:id="@+id/btn_scope_friends"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:text="AMIGOS"
+            android:textColor="@color/gray_text"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:background="@null" />
+    </LinearLayout>
+
+    <!-- Podium Container -->
+    <LinearLayout
+        android:id="@+id/layout_podium"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_ranking_scope"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 2nd Place (Left) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="54dp"
+                android:layout_height="54dp">
+                <ImageView
+                    android:id="@+id/img_silver_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_profile"
+                    android:background="@drawable/bg_pill"
+                    android:padding="4dp"
+                    app:tint="#C0C0C0" />
+                <TextView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:text="2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/bg_pill"
+                    android:layout_gravity="bottom|end" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_name_silver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VALKYRIE_01"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginTop="6dp" />
+
+            <TextView
+                android:id="@+id/tv_coins_silver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="92,400 GC"
+                android:textColor="@color/verde_vibrante"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- 1st Place (Center) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp">
+                <ImageView
+                    android:id="@+id/img_gold_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_profile"
+                    android:background="@drawable/bg_pill"
+                    android:padding="5dp"
+                    app:tint="@color/raridade_lendario" />
+                <TextView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:text="1"
+                    android:textColor="#000000"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/bg_timer_pill"
+                    android:layout_gravity="bottom|end" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_name_gold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ZENITH_PRIME"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginTop="6dp" />
+
+            <TextView
+                android:id="@+id/tv_coins_gold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="124,800 GC"
+                android:textColor="@color/verde_vibrante"
+                android:textStyle="bold"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- 3rd Place (Right) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="54dp"
+                android:layout_height="54dp">
+                <ImageView
+                    android:id="@+id/img_bronze_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_profile"
+                    android:background="@drawable/bg_pill"
+                    android:padding="4dp"
+                    app:tint="#CD7F32" />
+                <TextView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:text="3"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/bg_pill"
+                    android:layout_gravity="bottom|end" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_name_bronze"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CYBER_PUNK"
+                android:textColor="@color/white"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginTop="6dp" />
+
+            <TextView
+                android:id="@+id/tv_coins_bronze"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="84,100 GC"
+                android:textColor="@color/verde_vibrante"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Leaderboard Recycler View -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_leaderboard"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_podium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Loading Shimmer State -->
+    <ProgressBar
+        android:id="@+id/progress_ranking_loading"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/azul_neon"
+        app:layout_constraintTop_toTopOf="@id/rv_leaderboard"
+        app:layout_constraintBottom_toBottomOf="@id/rv_leaderboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Error State Overlay -->
+    <LinearLayout
+        android:id="@+id/layout_ranking_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/rv_leaderboard"
+        app:layout_constraintBottom_toBottomOf="@id/rv_leaderboard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tv_ranking_error_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Erro ao carregar o ranking de temporada."
+            android:textColor="@color/vermelho_neon"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btn_ranking_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tentar Novamente"
+            android:textColor="#000000"
+            android:background="@drawable/bg_button_neon"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="24dp"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

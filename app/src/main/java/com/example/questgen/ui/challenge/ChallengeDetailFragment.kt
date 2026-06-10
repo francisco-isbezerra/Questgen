@@ -123,6 +123,21 @@ class ChallengeDetailFragment : Fragment() {
                             }
                         }
                     }
+                    is ActiveChallengeState.Expired -> {
+                        binding.progressChallengeAction.visibility = View.GONE
+                        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("TEMPO ESGOTADO!")
+                            .setMessage(state.message)
+                            .setPositiveButton("OK") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
+
+                        mainViewModel.updateUser(state.updatedUser)
+                        mainViewModel.addHistoryEntry("Tempo Esgotado", "Falhou e perdeu 50 GC")
+                        challengeViewModel.clearActiveChallengeState()
+                        findNavController().popBackStack()
+                    }
                     is ActiveChallengeState.Error -> {
                         binding.progressChallengeAction.visibility = View.GONE
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
@@ -136,6 +151,14 @@ class ChallengeDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             challengeViewModel.timerString.collectLatest { timeStr ->
                 binding.tvTimer.text = timeStr
+            }
+        }
+
+        // Observe countdown progress flow dynamically
+        viewLifecycleOwner.lifecycleScope.launch {
+            challengeViewModel.timerProgress.collectLatest { progress ->
+                binding.progressChallengeDetail.progress = progress
+                binding.tvProgressPercentDetail.text = "Tempo Restante: $progress%"
             }
         }
 
@@ -228,10 +251,18 @@ class ChallengeDetailFragment : Fragment() {
             binding.btnAccept.visibility = View.GONE
             binding.btnClaim.visibility = View.VISIBLE
             binding.btnForfeit.visibility = View.VISIBLE
+            binding.progressChallengeDetail.visibility = View.VISIBLE
+            binding.tvProgressPercentDetail.visibility = View.VISIBLE
         } else {
             binding.btnAccept.visibility = View.VISIBLE
             binding.btnClaim.visibility = View.GONE
             binding.btnForfeit.visibility = View.GONE
+            binding.progressChallengeDetail.visibility = View.GONE
+            binding.tvProgressPercentDetail.visibility = View.GONE
+
+            // Set static display of total time for available challenge
+            val totalSec = challenge.tempo_total_segundos ?: challenge.tempo_restante_segundos ?: 0
+            binding.tvTimer.text = challengeViewModel.formatTime(totalSec)
         }
 
         // Fetch actual game challenges from backend dynamically

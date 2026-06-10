@@ -7,5 +7,6 @@ data class LeaderboardRow(
     @SerializedName("nome") val name: String,
     @SerializedName("game_coins") val game_coins: Int,
     @SerializedName("patente") val rank: String,
-    val is_current_user: Boolean
+    val is_current_user: Boolean,
+    @SerializedName("imagem_url") val image_url: String? = null
 )

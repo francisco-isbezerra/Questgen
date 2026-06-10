@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 sealed class ActiveChallengeState {
     object Loading : ActiveChallengeState()
     data class Success(val challenge: Challenge?) : ActiveChallengeState()
+    data class Expired(val message: String, val updatedUser: User) : ActiveChallengeState()
     data class Error(val message: String) : ActiveChallengeState()
 }
 
@@ -48,6 +49,9 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     private val _timerString = MutableStateFlow("00:00:00")
     val timerString: StateFlow<String> = _timerString
 
+    private val _timerProgress = MutableStateFlow(100)
+    val timerProgress: StateFlow<Int> = _timerProgress
+
     private var timerJob: Job? = null
     private var currentRemainingSeconds: Long = 0
 
@@ -61,9 +65,18 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                     _activeChallengeState.value = ActiveChallengeState.Success(challenge)
                     if (challenge != null && challenge.status == "ACTIVE") {
                         val seconds = challenge.tempo_restante_segundos ?: 0
-                        startCountdown(seconds)
+                        val total = challenge.tempo_total_segundos ?: seconds
+                        startCountdown(seconds, total, userId)
                     } else {
                         stopCountdown()
+                    }
+                } else if (response.status == "expired") {
+                    stopCountdown()
+                    val user = response.updated_user
+                    if (user != null) {
+                        _activeChallengeState.value = ActiveChallengeState.Expired(response.message ?: "O tempo expirou!", user)
+                    } else {
+                        _activeChallengeState.value = ActiveChallengeState.Success(null)
                     }
                 } else {
                     _activeChallengeState.value = ActiveChallengeState.Error(response.message ?: "Erro ao obter desafio ativo")
@@ -100,7 +113,9 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                     // Reload active challenge state
                     val challenge = response.data
                     _activeChallengeState.value = ActiveChallengeState.Success(challenge)
-                    startCountdown(challenge.tempo_restante_segundos ?: 0)
+                    val seconds = challenge.tempo_restante_segundos ?: 0
+                    val total = challenge.tempo_total_segundos ?: seconds
+                    startCountdown(seconds, total, userId)
                 } else {
                     _actionState.value = ChallengeActionState.Error(response.message ?: "Erro ao aceitar desafio")
                 }
@@ -146,16 +161,21 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun startCountdown(seconds: Long) {
+    fun startCountdown(seconds: Long, totalSeconds: Long, userId: Int) {
         stopCountdown()
         currentRemainingSeconds = seconds
+        val total = if (totalSeconds > 0) totalSeconds else seconds
         timerJob = viewModelScope.launch {
             while (currentRemainingSeconds > 0) {
                 _timerString.value = formatTime(currentRemainingSeconds)
+                val pct = if (total > 0) ((currentRemainingSeconds.toDouble() / total.toDouble()) * 100).toInt() else 100
+                _timerProgress.value = pct.coerceIn(0, 100)
                 delay(1000)
                 currentRemainingSeconds--
             }
             _timerString.value = "00:00:00"
+            _timerProgress.value = 0
+            fetchActiveChallenge(userId)
         }
     }
 
@@ -168,11 +188,15 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         _actionState.value = ChallengeActionState.Idle
     }
 
+    fun clearActiveChallengeState() {
+        _activeChallengeState.value = ActiveChallengeState.Success(null)
+    }
+
     fun resetGenerateState() {
         _generateChallengeState.value = GenerateChallengeState.Idle
     }
 
-    private fun formatTime(totalSeconds: Long): String {
+    fun formatTime(totalSeconds: Long): String {
         val hours = totalSeconds / 3600
         val minutes = (totalSeconds % 3600) / 60
         val seconds = totalSeconds % 60

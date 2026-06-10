@@ -7,5 +7,6 @@ data class User(
     @SerializedName("nome") val name: String,
     val email: String,
     @SerializedName("game_coins") val game_coins: Int,
-    @SerializedName("patente") val rank: String
+    @SerializedName("patente") val rank: String,
+    @SerializedName("imagem_url") val image_url: String? = null
 )

@@ -56,4 +56,14 @@ interface ApiService {
     suspend fun obterDesafiosPorJogo(
         @Query("game_id") gameId: Int
     ): ApiResponse<List<Challenge>>
+
+    @POST("editar_perfil.php")
+    suspend fun editarPerfil(
+        @Body payload: Map<String, String>
+    ): ApiResponse<User>
+
+    @POST("excluir_conta.php")
+    suspend fun excluirConta(
+        @Body payload: Map<String, Int>
+    ): ApiResponse<Map<String, String>>
 }

@@ -17,6 +17,20 @@ sealed class RankingState {
     data class Error(val message: String) : RankingState()
 }
 
+sealed class EditProfileState {
+    object Idle : EditProfileState()
+    object Loading : EditProfileState()
+    data class Success(val message: String) : EditProfileState()
+    data class Error(val message: String) : EditProfileState()
+}
+
+sealed class DeleteAccountState {
+    object Idle : DeleteAccountState()
+    object Loading : DeleteAccountState()
+    data class Success(val message: String) : DeleteAccountState()
+    data class Error(val message: String) : DeleteAccountState()
+}
+
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val userRepository = UserRepository(application)
@@ -24,6 +38,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
+
+    private val _editProfileState = MutableStateFlow<EditProfileState>(EditProfileState.Idle)
+    val editProfileState: StateFlow<EditProfileState> = _editProfileState
+
+    private val _deleteAccountState = MutableStateFlow<DeleteAccountState>(DeleteAccountState.Idle)
+    val deleteAccountState: StateFlow<DeleteAccountState> = _deleteAccountState
+
+    fun resetEditProfileState() {
+        _editProfileState.value = EditProfileState.Idle
+    }
+
+    fun resetDeleteAccountState() {
+        _deleteAccountState.value = DeleteAccountState.Idle
+    }
 
     private val _rankingState = MutableStateFlow<RankingState>(RankingState.Loading)
     val rankingState: StateFlow<RankingState> = _rankingState
@@ -86,5 +114,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val currentList = _challengeHistory.value.toMutableList()
         currentList.add(0, title to rewardMessage)
         _challengeHistory.value = currentList
+    }
+
+    fun editarPerfil(name: String, imageUrl: String?) {
+        val user = _currentUser.value ?: return
+        viewModelScope.launch {
+            _editProfileState.value = EditProfileState.Loading
+            try {
+                val response = userRepository.editarPerfil(user.id, name, imageUrl)
+                if (response.status == "success" && response.data != null) {
+                    _currentUser.value = response.data
+                    _editProfileState.value = EditProfileState.Success(response.message ?: "Perfil atualizado!")
+                    fetchRanking()
+                } else {
+                    _editProfileState.value = EditProfileState.Error(response.message ?: "Erro ao atualizar perfil")
+                }
+            } catch (e: Exception) {
+                _editProfileState.value = EditProfileState.Error("Falha de conexão: ${e.message}")
+            }
+        }
+    }
+
+    fun excluirConta() {
+        val user = _currentUser.value ?: return
+        viewModelScope.launch {
+            _deleteAccountState.value = DeleteAccountState.Loading
+            try {
+                val response = userRepository.excluirConta(user.id)
+                if (response.status == "success") {
+                    _deleteAccountState.value = DeleteAccountState.Success(response.message ?: "Conta excluída")
+                    logout()
+                } else {
+                    _deleteAccountState.value = DeleteAccountState.Error(response.message ?: "Erro ao excluir conta")
+                }
+            } catch (e: Exception) {
+                _deleteAccountState.value = DeleteAccountState.Error("Falha de conexão: ${e.message}")
+            }
+        }
     }
 }

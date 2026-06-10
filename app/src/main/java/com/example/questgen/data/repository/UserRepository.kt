@@ -39,7 +39,8 @@ class UserRepository(private val context: Context) {
         val email = sharedPrefs.getString("USER_EMAIL", "") ?: ""
         val coins = sharedPrefs.getInt("USER_COINS", 0)
         val rank = sharedPrefs.getString("USER_RANK", "COMUM") ?: "COMUM"
-        return User(id, name, email, coins, rank)
+        val imageUrl = sharedPrefs.getString("USER_IMAGE", null)
+        return User(id, name, email, coins, rank, imageUrl)
     }
 
     fun saveUserSession(user: User) {
@@ -49,11 +50,35 @@ class UserRepository(private val context: Context) {
             putString("USER_EMAIL", user.email)
             putInt("USER_COINS", user.game_coins)
             putString("USER_RANK", user.rank)
+            putString("USER_IMAGE", user.image_url)
             apply()
         }
     }
 
     fun clearSession() {
         sharedPrefs.edit().clear().apply()
+    }
+
+    suspend fun editarPerfil(userId: Int, name: String, imageUrl: String?): ApiResponse<User> {
+        val payload = mutableMapOf("user_id" to userId.toString(), "name" to name)
+        if (imageUrl != null) {
+            payload["image_url"] = imageUrl
+        } else {
+            payload["image_url"] = ""
+        }
+        val response = apiService.editarPerfil(payload)
+        if (response.status == "success" && response.data != null) {
+            saveUserSession(response.data)
+        }
+        return response
+    }
+
+    suspend fun excluirConta(userId: Int): ApiResponse<Map<String, String>> {
+        val payload = mapOf("user_id" to userId)
+        val response = apiService.excluirConta(payload)
+        if (response.status == "success") {
+            clearSession()
+        }
+        return response
     }
 }

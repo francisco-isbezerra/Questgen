@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.example.questgen.R
 import com.example.questgen.data.model.LeaderboardRow
 import com.example.questgen.databinding.FragmentRankingBinding
@@ -118,20 +119,69 @@ class RankingFragment : Fragment() {
         val remainingList = if (list.size > 3) list.subList(3, list.size) else emptyList()
 
         // Bind podium elements dynamically
+        val density = resources.displayMetrics.density
         if (podiumSize >= 1) {
             val gold = podiumList[0]
             binding.tvNameGold.text = gold.name
             binding.tvCoinsGold.text = "${gold.game_coins} GC"
+            
+            if (!gold.image_url.isNullOrEmpty()) {
+                binding.imgGoldRank.imageTintList = null
+                binding.imgGoldRank.colorFilter = null
+                binding.imgGoldRank.setPadding(0, 0, 0, 0)
+                binding.imgGoldRank.load(gold.image_url) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_profile)
+                    error(R.drawable.ic_profile)
+                }
+            } else {
+                val paddingPx = (5 * density).toInt()
+                binding.imgGoldRank.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                binding.imgGoldRank.imageTintList = android.content.res.ColorStateList.valueOf(resources.getColor(R.color.raridade_lendario, null))
+                binding.imgGoldRank.setImageResource(R.drawable.ic_profile)
+            }
         }
         if (podiumSize >= 2) {
             val silver = podiumList[1]
             binding.tvNameSilver.text = silver.name
             binding.tvCoinsSilver.text = "${silver.game_coins} GC"
+            
+            if (!silver.image_url.isNullOrEmpty()) {
+                binding.imgSilverRank.imageTintList = null
+                binding.imgSilverRank.colorFilter = null
+                binding.imgSilverRank.setPadding(0, 0, 0, 0)
+                binding.imgSilverRank.load(silver.image_url) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_profile)
+                    error(R.drawable.ic_profile)
+                }
+            } else {
+                val paddingPx = (4 * density).toInt()
+                binding.imgSilverRank.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                binding.imgSilverRank.imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#C0C0C0"))
+                binding.imgSilverRank.setImageResource(R.drawable.ic_profile)
+            }
         }
         if (podiumSize >= 3) {
             val bronze = podiumList[2]
             binding.tvNameBronze.text = bronze.name
             binding.tvCoinsBronze.text = "${bronze.game_coins} GC"
+            
+            if (!bronze.image_url.isNullOrEmpty()) {
+                binding.imgBronzeRank.imageTintList = null
+                binding.imgBronzeRank.colorFilter = null
+                binding.imgBronzeRank.setPadding(0, 0, 0, 0)
+                binding.imgBronzeRank.load(bronze.image_url) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_profile)
+                    error(R.drawable.ic_profile)
+                }
+            } else {
+                val paddingPx = (4 * density).toInt()
+                binding.imgBronzeRank.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                binding.imgBronzeRank.imageTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#CD7F32"))
+                binding.imgBronzeRank.setImageResource(R.drawable.ic_profile)
+            }
         }
 
         adapter.updateData(remainingList)

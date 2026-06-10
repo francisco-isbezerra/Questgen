@@ -64,14 +64,21 @@
             <FrameLayout
                 android:layout_width="54dp"
                 android:layout_height="54dp">
-                <ImageView
-                    android:id="@+id/img_silver_rank"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_profile"
-                    android:background="@drawable/bg_pill"
-                    android:padding="4dp"
-                    app:tint="#C0C0C0" />
+                    app:cardCornerRadius="27dp"
+                    app:cardBackgroundColor="@color/bg_secundario"
+                    app:cardElevation="0dp">
+                    <ImageView
+                        android:id="@+id/img_silver_rank"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_profile"
+                        android:scaleType="centerCrop"
+                        android:padding="4dp"
+                        app:tint="#C0C0C0" />
+                </androidx.cardview.widget.CardView>
                 <TextView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
@@ -116,14 +123,21 @@
             <FrameLayout
                 android:layout_width="70dp"
                 android:layout_height="70dp">
-                <ImageView
-                    android:id="@+id/img_gold_rank"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_profile"
-                    android:background="@drawable/bg_pill"
-                    android:padding="5dp"
-                    app:tint="@color/raridade_lendario" />
+                    app:cardCornerRadius="35dp"
+                    app:cardBackgroundColor="@color/bg_secundario"
+                    app:cardElevation="0dp">
+                    <ImageView
+                        android:id="@+id/img_gold_rank"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_profile"
+                        android:scaleType="centerCrop"
+                        android:padding="5dp"
+                        app:tint="@color/raridade_lendario" />
+                </androidx.cardview.widget.CardView>
                 <TextView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
@@ -169,14 +183,21 @@
             <FrameLayout
                 android:layout_width="54dp"
                 android:layout_height="54dp">
-                <ImageView
-                    android:id="@+id/img_bronze_rank"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_profile"
-                    android:background="@drawable/bg_pill"
-                    android:padding="4dp"
-                    app:tint="#CD7F32" />
+                    app:cardCornerRadius="27dp"
+                    app:cardBackgroundColor="@color/bg_secundario"
+                    app:cardElevation="0dp">
+                    <ImageView
+                        android:id="@+id/img_bronze_rank"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_profile"
+                        android:scaleType="centerCrop"
+                        android:padding="4dp"
+                        app:tint="#CD7F32" />
+                </androidx.cardview.widget.CardView>
                 <TextView
                     android:layout_width="18dp"
                     android:layout_height="18dp"

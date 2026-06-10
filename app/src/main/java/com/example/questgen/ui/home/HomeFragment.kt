@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import coil.load
 import com.example.questgen.R
 import com.example.questgen.data.model.Challenge
 import com.example.questgen.databinding.FragmentHomeBinding
@@ -58,6 +59,24 @@ class HomeFragment : Fragment() {
                 user?.let {
                     binding.tvUsername.text = it.name
                     binding.tvCoins.text = "${it.game_coins} GC"
+
+                    // Dynamic image loading via Coil
+                    if (!it.image_url.isNullOrEmpty()) {
+                        binding.imgAvatar.imageTintList = null
+                        binding.imgAvatar.colorFilter = null
+                        binding.imgAvatar.setPadding(0, 0, 0, 0)
+                        binding.imgAvatar.load(it.image_url) {
+                            crossfade(true)
+                            placeholder(R.drawable.ic_profile)
+                            error(R.drawable.ic_profile)
+                        }
+                    } else {
+                        val paddingPx = (4 * resources.displayMetrics.density).toInt()
+                        binding.imgAvatar.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+                        binding.imgAvatar.imageTintList = android.content.res.ColorStateList.valueOf(resources.getColor(R.color.azul_neon, null))
+                        binding.imgAvatar.setImageResource(R.drawable.ic_profile)
+                    }
+
                     // Fetch active challenge for this user
                     challengeViewModel.fetchActiveChallenge(it.id)
                 }
@@ -80,6 +99,19 @@ class HomeFragment : Fragment() {
                             showEmptyState()
                         }
                     }
+                    is ActiveChallengeState.Expired -> {
+                        binding.progressHomeLoad.visibility = View.GONE
+                        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("TEMPO ESGOTADO!")
+                            .setMessage(state.message)
+                            .setPositiveButton("OK", null)
+                            .show()
+
+                        // Update shared session and profile history log
+                        mainViewModel.updateUser(state.updatedUser)
+                        mainViewModel.addHistoryEntry("Tempo Esgotado", "Falhou e perdeu 50 GC")
+                        challengeViewModel.clearActiveChallengeState()
+                    }
                     is ActiveChallengeState.Error -> {
                         binding.progressHomeLoad.visibility = View.GONE
                         showEmptyState() // Fallback
@@ -92,6 +124,14 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             challengeViewModel.timerString.collectLatest { timeStr ->
                 binding.tvChallengeTimer.text = timeStr
+            }
+        }
+
+        // Collect countdown progress flow dynamically
+        viewLifecycleOwner.lifecycleScope.launch {
+            challengeViewModel.timerProgress.collectLatest { progress ->
+                binding.progressChallenge.progress = progress
+                binding.tvProgressPercent.text = "Tempo Restante: $progress%"
             }
         }
     }

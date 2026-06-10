@@ -131,6 +131,27 @@
                     android:textSize="16sp"
                     android:layout_marginTop="16dp" />
 
+                <!-- Reactive progress bar -->
+                <ProgressBar
+                    android:id="@+id/progress_challenge_detail"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="16dp"
+                    android:progress="100"
+                    android:progressTint="@color/azul_neon"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_progress_percent_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Tempo Restante: 100%"
+                    android:textColor="@color/gray_text"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

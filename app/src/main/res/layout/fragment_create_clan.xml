@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_principal"
+    android:padding="20dp">
+
+    <!-- Top Navigation Bar -->
+    <ImageView
+        android:id="@+id/btn_back_create_clan"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_back_arrow"
+        app:tint="@color/white"
+        android:padding="6dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_create_clan_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CRIAR CLÃ"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/btn_back_create_clan"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back_create_clan"
+        app:layout_constraintStart_toEndOf="@id/btn_back_create_clan"
+        android:layout_marginStart="16dp" />
+
+    <!-- Name Label -->
+    <TextView
+        android:id="@+id/tv_clan_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NOME DO CLÃ"
+        android:textColor="@color/gray_text"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_back_create_clan"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Name Input Field -->
+    <EditText
+        android:id="@+id/et_clan_name"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:hint="Ex: Alpha Esports"
+        android:textColorHint="@color/gray_text"
+        android:maxLines="1"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toBottomOf="@id/tv_clan_name_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Tag Label -->
+    <TextView
+        android:id="@+id/tv_clan_tag_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TAG DO CLÃ (2 A 5 CARACTERES)"
+        android:textColor="@color/gray_text"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/et_clan_name"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Tag Input Field -->
+    <EditText
+        android:id="@+id/et_clan_tag"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:hint="Ex: ALP"
+        android:textColorHint="@color/gray_text"
+        android:maxLines="1"
+        android:inputType="textCapCharacters"
+        app:layout_constraintTop_toBottomOf="@id/tv_clan_tag_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Description Label -->
+    <TextView
+        android:id="@+id/tv_clan_desc_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DESCRIÇÃO DO CLÃ"
+        android:textColor="@color/gray_text"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/et_clan_tag"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Description Input Field -->
+    <EditText
+        android:id="@+id/et_clan_desc"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:hint="Escreva os objetivos do clã na arena"
+        android:textColorHint="@color/gray_text"
+        android:maxLines="4"
+        android:gravity="top|start"
+        android:inputType="textMultiLine"
+        app:layout_constraintTop_toBottomOf="@id/tv_clan_desc_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btn_create_clan_submit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_button_neon"
+        android:text="CRIAR CLÃ (5.000 GC)"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        app:backgroundTint="@null"
+        app:layout_constraintTop_toBottomOf="@id/et_clan_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_premium_free_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* Grátis para jogadores Elite Premium"
+        android:textColor="@color/gray_text"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_create_clan_submit" />
+
+    <!-- Loading overlay -->
+    <ProgressBar
+        android:id="@+id/progress_create_clan_load"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/azul_neon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

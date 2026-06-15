@@ -7,6 +7,7 @@ import coil.load
 import com.example.questgen.R
 import com.example.questgen.data.model.Product
 import com.example.questgen.databinding.ItemProductBinding
+import com.example.questgen.util.formatCoins
 
 class ProductAdapter(
     private var products: List<Product>,
@@ -23,7 +24,7 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = products[position]
         holder.binding.tvProductName.text = product.name
-        holder.binding.tvProductPrice.text = "${product.price} GC"
+        holder.binding.tvProductPrice.text = product.price.formatCoins()
 
         // Rarity Tag dynamic details
         val mockTags = listOf("LENDÁRIO", "RARO", "FINAL BOSS", "CUPOM")

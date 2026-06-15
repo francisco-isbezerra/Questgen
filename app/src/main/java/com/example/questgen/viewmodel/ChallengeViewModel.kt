@@ -11,11 +11,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 sealed class ActiveChallengeState {
     object Loading : ActiveChallengeState()
-    data class Success(val challenge: Challenge?) : ActiveChallengeState()
+    data class Success(val activeChallenge: Challenge?, val pendingChallenges: List<Challenge>) : ActiveChallengeState()
     data class Expired(val message: String, val updatedUser: User) : ActiveChallengeState()
+    data class AutoCompleted(val message: String, val updatedUser: User) : ActiveChallengeState()
     data class Error(val message: String) : ActiveChallengeState()
 }
 
@@ -61,8 +68,9 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
             try {
                 val response = challengeRepository.getActiveChallenge(userId)
                 if (response.status == "success") {
-                    val challenge = response.data
-                    _activeChallengeState.value = ActiveChallengeState.Success(challenge)
+                    val challenge = response.activeChallenge
+                    val pendingList = response.pendingChallenges ?: emptyList()
+                    _activeChallengeState.value = ActiveChallengeState.Success(challenge, pendingList)
                     if (challenge != null && challenge.status == "ACTIVE") {
                         val seconds = challenge.tempo_restante_segundos ?: 0
                         val total = challenge.tempo_total_segundos ?: seconds
@@ -76,7 +84,15 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                     if (user != null) {
                         _activeChallengeState.value = ActiveChallengeState.Expired(response.message ?: "O tempo expirou!", user)
                     } else {
-                        _activeChallengeState.value = ActiveChallengeState.Success(null)
+                        _activeChallengeState.value = ActiveChallengeState.Success(null, emptyList())
+                    }
+                } else if (response.status == "completed") {
+                    stopCountdown()
+                    val user = response.updated_user
+                    if (user != null) {
+                        _activeChallengeState.value = ActiveChallengeState.AutoCompleted(response.message ?: "Desafio concluído automaticamente!", user)
+                    } else {
+                        _activeChallengeState.value = ActiveChallengeState.Success(null, emptyList())
                     }
                 } else {
                     _activeChallengeState.value = ActiveChallengeState.Error(response.message ?: "Erro ao obter desafio ativo")
@@ -112,7 +128,7 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                     _actionState.value = ChallengeActionState.Success("Desafio aceito com sucesso!")
                     // Reload active challenge state
                     val challenge = response.data
-                    _activeChallengeState.value = ActiveChallengeState.Success(challenge)
+                    _activeChallengeState.value = ActiveChallengeState.Success(challenge, emptyList())
                     val seconds = challenge.tempo_restante_segundos ?: 0
                     val total = challenge.tempo_total_segundos ?: seconds
                     startCountdown(seconds, total, userId)
@@ -125,17 +141,91 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun claimReward(userId: Int, challengeId: Int) {
+    fun claimReward(userId: Int, challengeId: Int, comprovanteUrl: String) {
         viewModelScope.launch {
             _actionState.value = ChallengeActionState.Loading
             try {
-                val response = challengeRepository.claimReward(userId, challengeId)
+                val response = challengeRepository.claimReward(userId, challengeId, comprovanteUrl)
                 if (response.status == "success" && response.data != null) {
-                    _actionState.value = ChallengeActionState.Success("Recompensa resgatada!", response.data)
-                    _activeChallengeState.value = ActiveChallengeState.Success(null)
+                    _actionState.value = ChallengeActionState.Success("Comprovante enviado! Aguardando validação.", response.data)
+                    _activeChallengeState.value = ActiveChallengeState.Success(
+                        null,
+                        emptyList()
+                    )
+                    // Trigger reload of active challenge to fetch from server with status PENDING_VALIDATION
+                    fetchActiveChallenge(userId)
                     stopCountdown()
                 } else {
                     _actionState.value = ChallengeActionState.Error(response.message ?: "Erro ao resgatar recompensa")
+                }
+            } catch (e: Exception) {
+                _actionState.value = ChallengeActionState.Error("Sem conexão: ${e.message}")
+            }
+        }
+    }
+
+    fun uploadComprovante(userId: Int, challengeId: Int, imageUri: android.net.Uri) {
+        viewModelScope.launch {
+            _actionState.value = ChallengeActionState.Loading
+            try {
+                val context = getApplication<Application>().applicationContext
+                val contentResolver = context.contentResolver
+                
+                var fileName = "comprovante.png"
+                val cursor = contentResolver.query(imageUri, null, null, null, null)
+                cursor?.use {
+                    if (it.moveToFirst()) {
+                        val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                        if (nameIndex != -1) {
+                            fileName = it.getString(nameIndex)
+                        }
+                    }
+                }
+                
+                val tempFile = File(context.cacheDir, fileName)
+                contentResolver.openInputStream(imageUri)?.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                
+                val mimeType = contentResolver.getType(imageUri) ?: "image/*"
+                val mediaType = mimeType.toMediaTypeOrNull()
+                val requestFile = tempFile.asRequestBody(mediaType)
+                val imagePart = MultipartBody.Part.createFormData("image", tempFile.name, requestFile)
+                
+                val userIdBody = userId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val challengeIdBody = challengeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                
+                val response = challengeRepository.uploadComprovante(userIdBody, challengeIdBody, imagePart)
+                if (response.status == "success") {
+                    _actionState.value = ChallengeActionState.Success(response.message ?: "Comprovante enviado com sucesso!")
+                    fetchActiveChallenge(userId)
+                    stopCountdown()
+                } else {
+                    _actionState.value = ChallengeActionState.Error(response.message ?: "Erro ao enviar comprovante")
+                }
+                
+                if (tempFile.exists()) {
+                    tempFile.delete()
+                }
+            } catch (e: Exception) {
+                _actionState.value = ChallengeActionState.Error("Falha ao enviar comprovante: ${e.message}")
+            }
+        }
+    }
+
+    fun approveChallenge(userId: Int, challengeId: Int) {
+        viewModelScope.launch {
+            _actionState.value = ChallengeActionState.Loading
+            try {
+                val response = challengeRepository.approveChallenge(userId, challengeId)
+                if (response.status == "success" && response.data != null) {
+                    _actionState.value = ChallengeActionState.Success(response.message ?: "Desafio validado e recompensas creditadas!", response.data)
+                    _activeChallengeState.value = ActiveChallengeState.Success(null, emptyList())
+                    stopCountdown()
+                } else {
+                    _actionState.value = ChallengeActionState.Error(response.message ?: "Erro ao validar desafio")
                 }
             } catch (e: Exception) {
                 _actionState.value = ChallengeActionState.Error("Sem conexão: ${e.message}")
@@ -150,7 +240,7 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                 val response = challengeRepository.giveUpChallenge(userId, challengeId)
                 if (response.status == "success" && response.data != null) {
                     _actionState.value = ChallengeActionState.Success("Desafio abandonado.", response.data)
-                    _activeChallengeState.value = ActiveChallengeState.Success(null)
+                    _activeChallengeState.value = ActiveChallengeState.Success(null, emptyList())
                     stopCountdown()
                 } else {
                     _actionState.value = ChallengeActionState.Error(response.message ?: "Erro ao desistir do desafio")
@@ -189,7 +279,7 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun clearActiveChallengeState() {
-        _activeChallengeState.value = ActiveChallengeState.Success(null)
+        _activeChallengeState.value = ActiveChallengeState.Success(null, emptyList())
     }
 
     fun resetGenerateState() {
@@ -235,6 +325,24 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
             nextChallenges.add(gameChallengesList[nextIndex])
         }
         return nextChallenges
+    }
+
+    private val _historyState = MutableStateFlow<List<Challenge>>(emptyList())
+    val historyState: StateFlow<List<Challenge>> = _historyState
+
+    fun fetchHistory(userId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = challengeRepository.getHistory(userId)
+                if (response.status == "success" && response.data != null) {
+                    _historyState.value = response.data
+                } else {
+                    _historyState.value = emptyList()
+                }
+            } catch (e: Exception) {
+                _historyState.value = emptyList()
+            }
+        }
     }
 
     override fun onCleared() {

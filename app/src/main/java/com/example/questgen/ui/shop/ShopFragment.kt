@@ -4,20 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.questgen.data.model.Product
 import com.example.questgen.databinding.FragmentShopBinding
+import com.example.questgen.util.collectLatestFlow
+import com.example.questgen.util.toast
 import com.example.questgen.viewmodel.MainViewModel
 import com.example.questgen.viewmodel.ShopState
 import com.example.questgen.viewmodel.ShopViewModel
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class ShopFragment : Fragment() {
 
@@ -51,9 +49,12 @@ class ShopFragment : Fragment() {
         binding.rvProducts.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvProducts.adapter = adapter
 
+        // Trigger initial data load (cached in ViewModel)
+        shopViewModel.fetchShopItems()
+
         // Setup retry click
         binding.btnShopRetry.setOnClickListener {
-            shopViewModel.fetchShopItems()
+            shopViewModel.fetchShopItems(forceRefresh = true)
         }
 
         // Setup Tab filter selection
@@ -67,35 +68,51 @@ class ShopFragment : Fragment() {
         })
 
         // Observe raw product load list
-        viewLifecycleOwner.lifecycleScope.launch {
-            shopViewModel.shopState.collectLatest { state ->
-                when (state) {
-                    is ShopState.Loading -> {
-                        binding.progressShopLoading.visibility = View.VISIBLE
-                        binding.layoutShopError.visibility = View.GONE
-                        binding.rvProducts.visibility = View.GONE
-                    }
-                    is ShopState.Success -> {
-                        binding.progressShopLoading.visibility = View.GONE
-                        binding.layoutShopError.visibility = View.GONE
-                        binding.rvProducts.visibility = View.VISIBLE
-                        allProductsList = state.list
-                        filterProducts(shopViewModel.currentTab.value)
-                    }
-                    is ShopState.Error -> {
-                        binding.progressShopLoading.visibility = View.GONE
-                        binding.layoutShopError.visibility = View.VISIBLE
-                        binding.rvProducts.visibility = View.GONE
-                        binding.tvShopErrorMsg.text = state.message
-                    }
+        collectLatestFlow(shopViewModel.shopState) { state ->
+            when (state) {
+                is ShopState.Loading -> {
+                    binding.progressShopLoading.visibility = View.VISIBLE
+                    binding.layoutShopError.visibility = View.GONE
+                    binding.rvProducts.visibility = View.GONE
+                }
+                is ShopState.Success -> {
+                    binding.progressShopLoading.visibility = View.GONE
+                    binding.layoutShopError.visibility = View.GONE
+                    binding.rvProducts.visibility = View.VISIBLE
+                    allProductsList = state.list
+                    filterProducts(shopViewModel.currentTab.value)
+                }
+                is ShopState.Error -> {
+                    binding.progressShopLoading.visibility = View.GONE
+                    binding.layoutShopError.visibility = View.VISIBLE
+                    binding.rvProducts.visibility = View.GONE
+                    binding.tvShopErrorMsg.text = state.message
                 }
             }
         }
 
         // Observe category tab and re-filter
-        viewLifecycleOwner.lifecycleScope.launch {
-            shopViewModel.currentTab.collectLatest { tabName ->
-                filterProducts(tabName)
+        collectLatestFlow(shopViewModel.currentTab) { tabName ->
+            filterProducts(tabName)
+        }
+
+        // Observe buyCosmeticState for dynamic feedback
+        collectLatestFlow(mainViewModel.buyCosmeticState) { state ->
+            when (state) {
+                is com.example.questgen.viewmodel.BuyCosmeticState.Loading -> {
+                    binding.progressShopLoading.visibility = View.VISIBLE
+                }
+                is com.example.questgen.viewmodel.BuyCosmeticState.Success -> {
+                    binding.progressShopLoading.visibility = View.GONE
+                    toast(state.message)
+                    mainViewModel.resetBuyCosmeticState()
+                }
+                is com.example.questgen.viewmodel.BuyCosmeticState.Error -> {
+                    binding.progressShopLoading.visibility = View.GONE
+                    toast(state.message)
+                    mainViewModel.resetBuyCosmeticState()
+                }
+                else -> {}
             }
         }
     }
@@ -105,6 +122,7 @@ class ShopFragment : Fragment() {
             when (tabName) {
                 "SKINS" -> product.category.equals("Skins", ignoreCase = true)
                 "CUPONS" -> product.category.equals("Gift Cards", ignoreCase = true) || product.category.equals("Prêmios Digitais", ignoreCase = true)
+                "COSMÉTICOS" -> product.category.equals("Cosméticos", ignoreCase = true)
                 else -> product.category.equals("Periféricos", ignoreCase = true)
             }
         }
@@ -114,21 +132,25 @@ class ShopFragment : Fragment() {
     private fun simulateRedemption(product: Product) {
         val currentUser = mainViewModel.currentUser.value
         if (currentUser == null) {
-            Toast.makeText(requireContext(), "Faça login para realizar trocas", Toast.LENGTH_SHORT).show()
+            toast("Faça login para realizar trocas")
             return
         }
 
         if (currentUser.game_coins < product.price) {
             val missing = product.price - currentUser.game_coins
-            Toast.makeText(requireContext(), "Saldo insuficiente! Faltam $missing GC", Toast.LENGTH_LONG).show()
+            toast("Saldo insuficiente! Faltam $missing GC")
             return
         }
 
-        // Deduct coins and update Shared ViewModel
-        val updatedUser = currentUser.copy(game_coins = currentUser.game_coins - product.price)
-        mainViewModel.updateUser(updatedUser)
-
-        Toast.makeText(requireContext(), "Resgate efetuado! ${product.name} enviado ao inventário", Toast.LENGTH_LONG).show()
+        // Se for um cosmético (moldura), comprar de forma persistente e segura no banco
+        if (product.category.equals("Cosméticos", ignoreCase = true)) {
+            mainViewModel.comprarCosmetico(product.id)
+        } else {
+            // Deduct coins and update Shared ViewModel locally
+            val updatedUser = currentUser.copy(game_coins = currentUser.game_coins - product.price)
+            mainViewModel.updateUser(updatedUser)
+            toast("Resgate efetuado! ${product.name} enviado ao inventário")
+        }
     }
 
     override fun onDestroyView() {

@@ -29,7 +29,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         fetchShopItems()
     }
 
-    fun fetchShopItems() {
+    fun fetchShopItems(forceRefresh: Boolean = false) {
+        if (!forceRefresh && _shopState.value is ShopState.Success) {
+            return
+        }
         viewModelScope.launch {
             _shopState.value = ShopState.Loading
             try {

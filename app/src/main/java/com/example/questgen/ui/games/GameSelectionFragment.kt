@@ -4,21 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.questgen.R
 import com.example.questgen.databinding.FragmentGameSelectionBinding
+import com.example.questgen.util.collectLatestFlow
+import com.example.questgen.util.toast
 import com.example.questgen.viewmodel.GameViewModel
 import com.example.questgen.viewmodel.GamesState
 import com.example.questgen.viewmodel.MainViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class GameSelectionFragment : Fragment() {
 
@@ -44,7 +42,7 @@ class GameSelectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvSuggestGame.setOnClickListener {
-            Toast.makeText(requireContext(), "Sugestão registrada para análise do protocolo!", Toast.LENGTH_SHORT).show()
+            toast("Sugestão registrada para análise do protocolo!")
         }
 
         // Setup adapter
@@ -66,26 +64,24 @@ class GameSelectionFragment : Fragment() {
         }
 
         // Observe games loading / content states
-        viewLifecycleOwner.lifecycleScope.launch {
-            gameViewModel.gamesState.collectLatest { state ->
-                when (state) {
-                    is GamesState.Loading -> {
-                        binding.progressGamesLoading.visibility = View.VISIBLE
-                        binding.layoutGamesError.visibility = View.GONE
-                        binding.rvGames.visibility = View.GONE
-                    }
-                    is GamesState.Success -> {
-                        binding.progressGamesLoading.visibility = View.GONE
-                        binding.layoutGamesError.visibility = View.GONE
-                        binding.rvGames.visibility = View.VISIBLE
-                        adapter.updateData(state.list)
-                    }
-                    is GamesState.Error -> {
-                        binding.progressGamesLoading.visibility = View.GONE
-                        binding.layoutGamesError.visibility = View.VISIBLE
-                        binding.rvGames.visibility = View.GONE
-                        binding.tvErrorMsg.text = state.message
-                    }
+        collectLatestFlow(gameViewModel.gamesState) { state ->
+            when (state) {
+                is GamesState.Loading -> {
+                    binding.progressGamesLoading.visibility = View.VISIBLE
+                    binding.layoutGamesError.visibility = View.GONE
+                    binding.rvGames.visibility = View.GONE
+                }
+                is GamesState.Success -> {
+                    binding.progressGamesLoading.visibility = View.GONE
+                    binding.layoutGamesError.visibility = View.GONE
+                    binding.rvGames.visibility = View.VISIBLE
+                    adapter.updateData(state.list)
+                }
+                is GamesState.Error -> {
+                    binding.progressGamesLoading.visibility = View.GONE
+                    binding.layoutGamesError.visibility = View.VISIBLE
+                    binding.rvGames.visibility = View.GONE
+                    binding.tvErrorMsg.text = state.message
                 }
             }
         }

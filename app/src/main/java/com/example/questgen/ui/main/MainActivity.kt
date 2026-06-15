@@ -67,6 +67,76 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Global notification loop
+        lifecycleScope.launch {
+            while (true) {
+                val user = sharedViewModel.currentUser.value
+                if (user != null) {
+                    try {
+                        val repository = com.example.questgen.data.repository.ChallengeRepository(applicationContext)
+                        val response = repository.verificarNotificacoes(user.id)
+                        if (response.status == "success" && response.houveMudanca) {
+                            showGlobalNotificationDialog(response)
+                        }
+                    } catch (e: Exception) {
+                        // Ignore background network checker anomalies
+                    }
+                }
+                kotlinx.coroutines.delay(7000) // check every 7 seconds
+            }
+        }
+    }
+
+    private fun showGlobalNotificationDialog(response: com.example.questgen.data.model.ChallengeNotificationResponse) {
+        val titleText = if (response.resultado == "COMPLETED") {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                android.text.Html.fromHtml("<font color='#00FF7F'>🏆 DESAFIO APROVADO!</font>", android.text.Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                @Suppress("DEPRECATION")
+                android.text.Html.fromHtml("<font color='#00FF7F'>🏆 DESAFIO APROVADO!</font>")
+            }
+        } else {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                android.text.Html.fromHtml("<font color='#FF4C4C'>❌ DESAFIO RECUSADO</font>", android.text.Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                @Suppress("DEPRECATION")
+                android.text.Html.fromHtml("<font color='#FF4C4C'>❌ DESAFIO RECUSADO</font>")
+            }
+        }
+
+        val message = if (response.resultado == "COMPLETED") {
+            "Sua jogada no desafio \"${response.tituloDesafio}\" foi validada com sucesso pela IA. +${response.recompensa} GameCoins creditadas!"
+        } else {
+            "Não conseguimos validar o seu comprovante para o desafio \"${response.tituloDesafio}\". Tente novamente!"
+        }
+
+        val positiveButtonText = if (response.resultado == "COMPLETED") "IR PARA O HISTÓRICO" else "FECHAR"
+
+        val builder = com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(titleText)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(positiveButtonText) { dialog, _ ->
+                sharedViewModel.loadCurrentUser()
+                sharedViewModel.notifyChallengeStatusChanged()
+                if (response.resultado == "COMPLETED") {
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                    navHostFragment?.navController?.navigate(R.id.historyFragment)
+                }
+                dialog.dismiss()
+            }
+
+        if (response.resultado == "COMPLETED") {
+            builder.setNegativeButton("FECHAR") { dialog, _ ->
+                sharedViewModel.loadCurrentUser()
+                sharedViewModel.notifyChallengeStatusChanged()
+                dialog.dismiss()
+            }
+        }
+
+        builder.show()
     }
 
     override fun onResume() {

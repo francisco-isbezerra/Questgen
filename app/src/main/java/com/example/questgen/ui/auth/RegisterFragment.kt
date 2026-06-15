@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.example.questgen.databinding.FragmentRegisterBinding
 import com.example.questgen.ui.main.MainActivity
+import com.example.questgen.util.collectLatestFlow
 import com.example.questgen.viewmodel.AuthState
 import com.example.questgen.viewmodel.AuthViewModel
-import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment() {
 
@@ -56,28 +55,26 @@ class RegisterFragment : Fragment() {
             (activity as? AuthActivity)?.navigateToLogin()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.authState.collect { state ->
-                when (state) {
-                    is AuthState.Idle -> {
-                        setLoading(false)
-                        binding.tvError.visibility = View.GONE
-                    }
-                    is AuthState.Loading -> {
-                        setLoading(true)
-                        binding.tvError.visibility = View.GONE
-                    }
-                    is AuthState.Success -> {
-                        setLoading(false)
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
-                    }
-                    is AuthState.Error -> {
-                        setLoading(false)
-                        binding.tvError.text = state.message
-                        binding.tvError.visibility = View.VISIBLE
-                    }
+        collectLatestFlow(viewModel.authState) { state ->
+            when (state) {
+                is AuthState.Idle -> {
+                    setLoading(false)
+                    binding.tvError.visibility = View.GONE
+                }
+                is AuthState.Loading -> {
+                    setLoading(true)
+                    binding.tvError.visibility = View.GONE
+                }
+                is AuthState.Success -> {
+                    setLoading(false)
+                    val intent = Intent(requireContext(), MainActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
+                is AuthState.Error -> {
+                    setLoading(false)
+                    binding.tvError.text = state.message
+                    binding.tvError.visibility = View.VISIBLE
                 }
             }
         }

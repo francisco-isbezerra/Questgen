@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_principal"
+    android:padding="20dp">
+
+    <!-- Top Navigation Bar -->
+    <ImageView
+        android:id="@+id/btn_back_battle_pass"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_back_arrow"
+        app:tint="@color/white"
+        android:padding="6dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_battle_pass_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PASSE DE BATALHA"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/btn_back_battle_pass"
+        app:layout_constraintBottom_toBottomOf="@id/btn_back_battle_pass"
+        app:layout_constraintStart_toEndOf="@id/btn_back_battle_pass"
+        android:layout_marginStart="16dp" />
+
+    <!-- Top Progress Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_bp_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/bg_secundario"
+        app:layout_constraintTop_toBottomOf="@id/btn_back_battle_pass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_bp_current_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NÍVEL 1"
+                android:textColor="@color/azul_neon"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_bp_level_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PASSE ATIVO"
+                android:textColor="@color/verde_vibrante"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:background="#1B3320"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progress_bp_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="16dp"
+                android:progress="40"
+                android:max="100"
+                android:progressDrawable="@drawable/bg_progress_neon"
+                app:layout_constraintTop_toBottomOf="@id/tv_bp_current_level"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_bp_xp_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40 / 100 XP para o próximo nível"
+                android:textColor="@color/gray_text"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/progress_bp_bar"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Subtitle title -->
+    <TextView
+        android:id="@+id/tv_bp_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RECOMPENSAS DO PASSE"
+        android:textColor="@color/gray_text"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/card_bp_progress"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Rewards List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_battle_pass_rewards"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_bp_list_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_battle_pass_reward" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -176,6 +176,25 @@
                 android:textSize="15sp"
                 app:backgroundTint="@null" />
 
+            <!-- Preview image for select screen -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_proof_preview"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="6dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                app:cardBackgroundColor="@color/bg_secundario"
+                app:cardElevation="2dp">
+                <ImageView
+                    android:id="@+id/img_proof_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+
             <!-- REIVINDICAR RECOMPENSA (Secondary green or white) -->
             <Button
                 android:id="@+id/btn_claim"
@@ -183,7 +202,7 @@
                 android:layout_height="52dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/bg_button_dark"
-                android:text="REIVINDICAR RECOMPENSA"
+                android:text="SELECIONAR COMPROVANTE"
                 android:textColor="@color/verde_vibrante"
                 android:textStyle="bold"
                 android:textSize="15sp"
@@ -207,6 +226,40 @@
                 app:backgroundTint="@null"
                 app:strokeColor="@color/vermelho_neon"
                 app:strokeWidth="1dp" />
+
+            <!-- AGUARDANDO VALIDAÇÃO status and MODERATOR APPROVAL simulation button -->
+            <LinearLayout
+                android:id="@+id/layout_pending_validation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_pending_validation_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="AGUARDANDO VALIDAÇÃO DO COMPROVANTE..."
+                    android:textColor="#FFD700"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <Button
+                    android:id="@+id/btn_approve_moderator"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:background="@drawable/bg_button_dark"
+                    android:text="SIMULAR VALIDAÇÃO (MODERADOR)"
+                    android:textColor="@color/verde_vibrante"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    app:backgroundTint="@null"
+                    app:strokeColor="@color/verde_vibrante"
+                    app:strokeWidth="1dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Loader Action Progress -->

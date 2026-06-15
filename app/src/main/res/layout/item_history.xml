@@ -16,6 +16,7 @@
 
         <!-- History Icon indicator -->
         <ImageView
+            android:id="@+id/img_history_status_indicator"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/ic_games"

@@ -62,7 +62,7 @@
             android:textColorHint="#444444"
             android:textColor="@color/white"
             android:paddingHorizontal="16dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:inputType="textPersonName"
             app:layout_constraintTop_toBottomOf="@id/tv_label_name" />
 
@@ -89,7 +89,7 @@
             android:textColorHint="#444444"
             android:textColor="@color/white"
             android:paddingHorizontal="16dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:inputType="textEmailAddress"
             app:layout_constraintTop_toBottomOf="@id/tv_label_email" />
 
@@ -116,7 +116,7 @@
             android:textColorHint="#444444"
             android:textColor="@color/white"
             android:paddingHorizontal="16dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:inputType="textPassword"
             app:layout_constraintTop_toBottomOf="@id/tv_label_password" />
 

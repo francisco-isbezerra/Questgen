@@ -1,0 +1,236 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>Relatório Técnico de Desenvolvimento - QuestGen</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+  <w:View>Print</w:View>
+  <w:Zoom>100</w:Zoom>
+  <w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+@page {
+    size: 21.0cm 29.7cm; /* A4 */
+    margin: 3.0cm 2.0cm 3.0cm 3.0cm; /* ABNT: Superior 3cm, Direita 2cm, Inferior 3cm, Esquerda 3cm */
+}
+body {
+    font-family: 'Arial', sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000000;
+}
+h1 {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #003399;
+    margin-top: 18pt;
+    margin-bottom: 6pt;
+    page-break-after: avoid;
+}
+h2 {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #555555;
+    margin-top: 12pt;
+    margin-bottom: 4pt;
+    page-break-after: avoid;
+}
+p {
+    margin-top: 0;
+    margin-bottom: 8pt;
+    text-align: justify;
+    text-indent: 1.25cm; /* Recuo de parágrafo ABNT */
+}
+p.no-indent {
+    text-indent: 0;
+}
+ul {
+    margin-top: 0;
+    margin-bottom: 8pt;
+    padding-left: 20pt;
+}
+li {
+    margin-bottom: 4pt;
+    text-align: justify;
+}
+.cover {
+    text-align: center;
+    page-break-after: always;
+}
+.cover-title-pre {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 50pt;
+    margin-bottom: 20pt;
+}
+.cover-title {
+    font-size: 20pt;
+    font-weight: bold;
+    color: #003399;
+    margin-top: 80pt;
+}
+.cover-subtitle {
+    font-size: 16pt;
+    font-weight: bold;
+    margin-top: 10pt;
+    margin-bottom: 120pt;
+}
+.cover-authors-title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 10pt;
+}
+.cover-authors {
+    font-size: 13pt;
+    font-weight: bold;
+    line-height: 1.8;
+    margin-bottom: 150pt;
+}
+.cover-footer {
+    font-size: 11pt;
+    font-weight: bold;
+}
+.code-block {
+    font-family: 'Courier New', monospace;
+    font-size: 9.5pt;
+    background-color: #F4F4F4;
+    border: 1px solid #DDDDDD;
+    padding: 8pt;
+    margin-top: 6pt;
+    margin-bottom: 8pt;
+    margin-left: 20pt;
+    white-space: pre;
+}
+.bold-prefix {
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<!-- PÁGINA DE CAPA -->
+<div class="cover">
+    <div class="cover-title-pre">RELATÓRIO TÉCNICO DE DESENVOLVIMENTO</div>
+    <div class="cover-title">PLATAFORMA GAMIFICADA QUESTGEN</div>
+    <div class="cover-subtitle">Módulo Mobile Android (Kotlin) & API REST (PHP)</div>
+    
+    <div class="cover-authors-title">AUTORES:</div>
+    <div class="cover-authors">
+        Francisco Iranildo da Silva Bezerra<br>
+        Cauã Brandão Moreira<br>
+        Fernando Souza Siqueira
+    </div>
+    
+    <div class="cover-footer">
+        CURSO DE DESENVOLVIMENTO DE SOFTWARE<br>
+        ARENA QUESTGEN - JUNHO DE 2026
+    </div>
+</div>
+
+<br clear="all" style="page-break-before:always">
+
+<!-- CONTEÚDO PRINCIPAL -->
+
+<h1>1. Introdução e Objetivo do Projeto</h1>
+<p>O <b>QuestGen</b> é uma plataforma integrada de gamificação voltada para o aumento de produtividade e engajamento dos usuários. Através da transposição de mecânicas de jogos de RPG e eSports para o gerenciamento de tarefas no mundo real, o sistema permite que o usuário transforme suas tarefas diárias em desafios recompensadores (denominados "Expedições" ou "Quests").</p>
+<p>Os usuários cadastrados na arena digital podem selecionar um jogo de sua preferência para receber expedições aleatórias. Ao aceitar um desafio, inicia-se uma contagem regressiva em tempo real. Completar a tarefa dentro do prazo rende moedas virtuais chamadas GameCoins (GC), enquanto falhas ou desistências aplicam penalidades imediatas no saldo e influenciam a patente (ranking) global do competidor na temporada. O progresso acumulado pode ser trocado na loja virtual do ecossistema por prêmios que variam de cupons digitais a hardwares reais.</p>
+
+<h1>2. Regras de Negócio (Business Rules)</h1>
+<p>Para garantir o equilíbrio matemático, a consistência e a atratividade do ecossistema gamificado, o sistema segue um conjunto de regras de negócios alinhadas estritamente na API e no aplicativo:</p>
+
+<h2>A. Dificuldades e Limites de Tempo de Expedições</h2>
+<p class="no-indent">Os desafios gerados dinamicamente possuem 5 níveis de dificuldade. Cada nível determina o tempo limite que o jogador dispõe para completar a missão após aceitá-la:</p>
+<ul>
+    <li><span class="bold-prefix">Nível 1 (Muito Fácil):</span> 5 Minutos (300 segundos) de tempo limite.</li>
+    <li><span class="bold-prefix">Nível 2 (Fácil):</span> 15 Minutos (900 segundos) de tempo limite.</li>
+    <li><span class="bold-prefix">Nível 3 (Médio):</span> 1 Hora (3.600 segundos) de tempo limite.</li>
+    <li><span class="bold-prefix">Nível 4 (Difícil):</span> 4 Horas (14.400 segundos) de tempo limite.</li>
+    <li><span class="bold-prefix">Nível 5 (Lendário):</span> 24 Horas (86.400 segundos) de tempo limite.</li>
+</ul>
+
+<h2>B. Ciclo de Vida do Desafio (Ativação e Expirabilidade)</h2>
+<ul>
+    <li><span class="bold-prefix">Exclusividade de Atividade:</span> Um jogador pode possuir apenas um único desafio ativo por vez. A geração de novos desafios seleciona uma tarefa do pool de dados de forma pseudo-aleatória. O usuário tem a opção de Aceitar ou Rejeitar a missão.</li>
+    <li><span class="bold-prefix">Contagem Ativa:</span> Ao clicar em 'Aceitar', o cronômetro inicia a contagem regressiva em tempo real (persistida no banco de dados e calculada dinamicamente mesmo se o aplicativo estiver fechado ou offline).</li>
+    <li><span class="bold-prefix">Reivindicação de Recompensa:</span> Se o objetivo for concluído e verificado dentro do prazo, o jogador clica em 'Reivindicar Recompensa'. O status muda para 'COMPLETADO' e o valor em GameCoins da recompensa é somado à conta do usuário.</li>
+    <li><span class="bold-prefix">Desistência Voluntária:</span> O usuário pode clicar em 'Desistir' no painel de detalhes a qualquer momento. Isso encerra o desafio com o status 'DESISTIU' e aplica uma penalidade imediata de debitar 50 GC do saldo.</li>
+    <li><span class="bold-prefix">Expiração Automática:</span> Caso o tempo restante atinja zero (0), a API do backend executa uma rotina transacional que marca o desafio como 'FALHOU', deduz 50 GC do saldo do jogador (respeitando o piso mínimo de zero moedas) e recalcula sua patente de forma automática.</li>
+</ul>
+
+<h2>C. Sistema de Patentes e Evolução</h2>
+<p class="no-indent">A patente do usuário é um reflexo direto do seu sucesso acumulado na arena. O sistema realiza o recálculo dinâmico da patente do jogador após qualquer alteração no saldo de GameCoins, conforme as seguintes faixas de pontuação:</p>
+<ul>
+    <li><span class="bold-prefix">Bronze:</span> 0 a 999 GameCoins.</li>
+    <li><span class="bold-prefix">Prata:</span> 1.000 a 2.999 GameCoins.</li>
+    <li><span class="bold-prefix">Ouro:</span> 3.000 a 9.999 GameCoins.</li>
+    <li><span class="bold-prefix">Platina:</span> 10.000 a 29.999 GameCoins.</li>
+    <li><span class="bold-prefix">Diamante:</span> 30.000 a 99.999 GameCoins.</li>
+    <li><span class="bold-prefix">Lendário (Master):</span> A partir de 100.000 GameCoins.</li>
+</ul>
+
+<h2>D. Regras da Loja de Recompensas</h2>
+<p class="no-indent">O catálogo da loja virtual exibe itens divididos em três categorias organizadas em abas no aplicativo:</p>
+<ul>
+    <li><span class="bold-prefix">Periféricos:</span> Teclados, Mouses, Fones de Ouvido, Controles Gamer.</li>
+    <li><span class="bold-prefix">Skins:</span> Itens cosméticos digitais e vestuários (AWP Dragon Lore, Vandal Prime, Moletons).</li>
+    <li><span class="bold-prefix">Cupons:</span> Cupons de desconto e créditos de saldo digital (Gift Cards Steam, PSN, Google Play).</li>
+</ul>
+<p>Ao solicitar a troca, o app valida se o usuário tem saldo suficiente. Em caso de sucesso, as moedas correspondentes são debitadas da conta e o produto é marcado como resgatado no histórico de transações.</p>
+
+<br clear="all" style="page-break-before:always">
+
+<h1>3. Arquitetura de Software e Fluxo de Dados</h1>
+<p>O QuestGen foi desenvolvido seguindo um padrão Cliente-Servidor distribuído, garantindo o desacoplamento de responsabilidades e facilitando futuras manutenções e a escalabilidade do software.</p>
+
+<h2>A. Frontend Mobile (Android Jetpack)</h2>
+<p class="no-indent">O aplicativo nativo foi construído em Kotlin sob o padrão de arquitetura MVVM (Model-View-ViewModel):</p>
+<ul>
+    <li><span class="bold-prefix">MVVM:</span> As telas de interface de usuário (Fragments) observam de forma reativa os fluxos de dados de estado (StateFlow) expostos pelos ViewModels. Não há chamadas diretas de banco de dados ou rede nas telas de visualização.</li>
+    <li><span class="bold-prefix">ViewBinding:</span> Fornece segurança nas referências de layout XML em tempo de compilação, eliminando erros de referência nula de views.</li>
+    <li><span class="bold-prefix">Coroutines & Assincronismo:</span> Uso de Kotlin Coroutines e loops assíncronos com fluxo contínuo para manter os contadores de tempo atualizados a cada segundo sem travar a renderização gráfica principal (Main Thread).</li>
+</ul>
+
+<h2>B. Comunicação HTTP e Segurança de Sessão</h2>
+<p>A comunicação é realizada através do cliente Retrofit. Desenvolvemos um interceptor OkHttp personalizado chamado Session Injector. Esse componente monitora as requisições de rede. Se o usuário estiver autenticado, o interceptor obtém o identificador ativo do armazenamento local (SharedPreferences) e injeta automaticamente o parâmetro 'user_id' nas rotas. Isso elimina a escrita repetida de parâmetros e simplifica o código.</p>
+
+<h2>C. Backend e Persistência (PHP & MySQL)</h2>
+<p>Hospedado localmente (infraestrutura XAMPP), o servidor responde por meio de endpoints PHP estruturados. A comunicação com o banco de dados é feita via PDO (PHP Data Objects) utilizando prepared statements, fornecendo imunidade contra injeções de SQL. As alterações de saldo e expiração rodam em transações controladas (ACID) para evitar inconsistência de dados.</p>
+
+<h1>4. Modelagem do Banco de Dados</h1>
+<p class="no-indent">A modelagem lógica é composta por 5 tabelas com relacionamentos estruturados no MySQL:</p>
+<ul>
+    <li><span class="bold-prefix">Tabela usuarios:</span> Armazena dados cadastrais, saldo de GameCoins, patente atual e link da foto de perfil.</li>
+    <li><span class="bold-prefix">Tabela jogos:</span> Títulos cadastrados para os desafios (ex: League of Legends, CS2, Valorant).</li>
+    <li><span class="bold-prefix">Tabela desafios:</span> Pool de missões contendo título, descrição, pontuação de recompensa e nível de dificuldade.</li>
+    <li><span class="bold-prefix">Tabela desafios_usuarios:</span> Tabela associativa n-para-n. Registra os desafios aceitos pelos usuários, seu status, tempo total e a data limite calculada.</li>
+    <li><span class="bold-prefix">Tabela produtos:</span> Catálogo de produtos da loja virtual, contendo preço em moedas, descrição, categoria e links de imagem CDN.</li>
+</ul>
+
+<h1>5. Estabilizações e Resolução de Problemas Técnicos</h1>
+<p>Durante a finalização do projeto, implementamos soluções para resolver falhas críticas comuns em sistemas integrados:</p>
+
+<h2>A. Correção de Enquadramento e Tinting (Máscara Azul) de Imagens</h2>
+<p class="no-indent">Os avatares no XML possuíam cores de preenchimento estáticas ('app:tint') e preenchimento de bordas ('android:padding'). Ao carregar uma foto customizada de rede via Coil, a imagem era mascarada de azul. Corrigimos isso programaticamente. Ao carregar a URL da web, limpamos a máscara de cor e o padding dinamicamente:</p>
+<div class="code-block">
+binding.imgProfileAvatar.imageTintList = null
+binding.imgProfileAvatar.colorFilter = null
+binding.imgProfileAvatar.setPadding(0, 0, 0, 0)
+</div>
+<p class="no-indent">Caso o usuário opte por remover a foto, o aplicativo restaura as dimensões de padding calculando os pixels baseado na densidade da tela do dispositivo e reaplica a cor neon azul correspondente.</p>
+
+<h2>B. Mitigação de Crashes por Re-seleção de Abas (NPE)</h2>
+<p>Cliques múltiplos rápidos na barra inferior causavam crashes devido ao ciclo de vida assíncrono do Navigation Component. Implementamos um listener de re-seleção ('setOnItemReselectedListener') que intercepta cliques redundantes e realiza o pop da pilha de fragmentos de forma segura, garantindo estabilidade.</p>
+
+<h2>C. Resolução de Fusos Horários e Data Limite</h2>
+<p>Havia conflito entre o fuso horário regional do PHP (+02:00) e do MySQL (-03:00), fazendo com que as datas limites expirassem imediatamente no app. Solucionamos o problema removendo o cálculo do PHP e delegando a matemática ao próprio MySQL usando a função nativa 'DATE_ADD(NOW(), INTERVAL ? SECOND)'.</p>
+
+<h2>D. Categorização da Loja e Imagens CDNs Estáveis</h2>
+<p>Para evitar telas em branco na loja de prêmios devido a categorias vazias no banco de dados, reescrevemos 'buscar_loja.php' adicionando cabeçalhos de tipo de conteúdo JSON e CORS, e implementando um classificador de categorias. Os produtos agora são separados em 'Periféricos', 'Skins' e 'Gift Cards' (que alimentam a aba 'CUPONS' no Android). Além disso, atualizamos todas as URLs de imagem para o CDN estável do Unsplash, garantindo carregamento rápido e livre de bloqueios de hotlinking.</p>
+
+</body>
+</html>

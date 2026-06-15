@@ -50,6 +50,59 @@
         android:id="@+id/profileFragment"
         android:name="com.example.questgen.ui.profile.ProfileFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_historyFragment"
+            app:destination="@id/historyFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_createClanFragment"
+            app:destination="@id/createClanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_profileFragment_to_battlePassFragment"
+            app:destination="@id/battlePassFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.questgen.ui.history.HistoryFragment"
+        android:label="Histórico"
+        tools:layout="@layout/fragment_history" />
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.questgen.ui.profile.EditProfileFragment"
+        android:label="Editar Perfil"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <fragment
+        android:id="@+id/createClanFragment"
+        android:name="com.example.questgen.ui.profile.CreateClanFragment"
+        android:label="Criar Clã"
+        tools:layout="@layout/fragment_create_clan" />
+
+    <fragment
+        android:id="@+id/battlePassFragment"
+        android:name="com.example.questgen.ui.profile.BattlePassFragment"
+        android:label="Passe de Batalha"
+        tools:layout="@layout/fragment_battle_pass" />
 
 </navigation>
